@@ -23,4 +23,5 @@ void saveEvent(tw_stime timestamp, char sourceType, id_type core, id_type local,
 void saveNeuronFire(tw_stime timestamp, id_type core, id_type local, tw_lpid destGID);
 
 
+void * loadNeuron(int size);
 #endif //NEMO_IOSTACK_H
