@@ -1,0 +1,4 @@
+type,name
+tw_stime,lastActiveTime
+tw_stime,lastLeakTime
+tw_lpid outputGID;

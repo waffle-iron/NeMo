@@ -14,12 +14,23 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu11")
 LIST(APPEND CMAKE_MODULE_PATH "${ROSS_SOURCE_DIR}/cmake/")
 #INCLUDE(GetGitRevisionDescription)
 #GET_GIT_HEAD_REVISION(GIT_RESPEC_MODEL GIT_SHA1_MODEL)
-
-
-
+set(COMPILE_PYTHON TRUE CACHE BOOL "Compile Python based neuron generator?" )
+set(PYTHON_INCLUDE_DIR /Users/markplagge/anaconda/envs/nemo/include/python3.5m CACHE STRING "Location of Python3 headers" )
+set(PYTHON_LIB /Users/markplagge/anaconda/envs/nemo/lib/ CACHE STRING "Location of Python3 lib config folder")
+set(DO_PYHOME TRUE CACHE BOOL "Set python home env setting?")
+set(PYHOME /Users/markplagge/anaconda/ CACHE STRING "Python home folder")
+IF(COMPILE_PYTHON)
+    if(${DO_PYHOME})
+        execute_process(COMMAND set PYTHONHOME=${PYHOME})
+    endif()
+    #execute_process(COMMAND python3.5-config --cflags OUTPUT_VARIABLE PYTHON_COMP_FLAGS )
+    #execute_process(COMMAND python3.5-config --ldflags OUTPUT_VARIABLE PYTHON_LIB)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -I${PYTHON_INCLUDE_DIR} -Wno-unused-result -Wsign-compare -Wunreachable-code -DNDEBUG -g -fwrapv -O3 -Wall -Wstrict-prototypes -arch x86_64 ")
+    set(CMAKE_EXE_LINKER_FLAGS  "${CMAKE_EXE_LINKER_FLAGS} -L${PYTHON_LIB} -lpython3.5m -ldl -framework CoreFoundation -Wl")
+endif()
 
 ## Model Compile-Time Options (Will add more later)
-set(NeMo_NEURONS_IN_CORE 512 CACHE STRING "The number of neurons in each simulated core")
+set(NeMo_NEURONS_IN_CORE 256 CACHE STRING "The number of neurons in each simulated core")
 set(NeMo_NUM_WEIGHTS_IN_NEURON 4 CACHE STRING "How many weights does a neuron have? (4 is TN default)")
 set(NeMo_SAVE_MSG FALSE CACHE BOOL "Save message paths to CSV or Couch? (debug messages)")
 set(NeMo_SAVE_MSG_COUCH FALSE CACHE BOOL "Save message paths directly to couch?")
@@ -82,8 +93,8 @@ set(model_srcs
         nemo_config.h 
         nemo_main.h )
 set(gen_srcs
-        scripts/tn_neuron_bin.h
         scripts/tn_neuron_bin.c
+        scripts/tn_neuron_bin.h
         )
 
 function (create_symlinks)
@@ -124,15 +135,16 @@ endfunction(create_symlinks)
 
 set(SCRIPT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/scripts")
 
-file(GLOB_RECURSE files RELATIVE ${SCRIPT_DIR} *.py *.dat)
+file(GLOB_RECURSE files RELATIVE ${SCRIPT_DIR} *.py *.dat *.rb)
 create_symlinks(${files})
 
 
 ADD_EXECUTABLE(NeMo  ${model_srcs})
-
-ADD_LIBRARY(NemoGen ${gen_srcs})
-
+if (${COMPILE_PYTHON})
+    ADD_EXECUTABLE(NemoGen ${gen_srcs})
+endif()
 TARGET_LINK_LIBRARIES(NeMo ROSS m)
+
 
 
 
