@@ -12,8 +12,8 @@
 #include <Python.h>
 //#include "../../../core/ross.h"
 
-tn_neuron_state *createFromData(bool synapticConnectivity[NEURONS_IN_CORE],
-                                short G_i[NEURONS_IN_CORE],
+void *createFromData(bool* synapticConnectivity,
+                                short* G_i,
                                 short sigma[4],
                                 short S[4],
                                 bool b[4],

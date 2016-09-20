@@ -3,6 +3,12 @@ Contains a class/struct that represents a TN Neuron.
 """
 import numpy as np
 from cffi import FFI
+import os
+x = os.getcwd()
+import sys
+sys.path.append(x)
+from _tn_neuron import ffi
+
 
 """
 Typedef ref:
@@ -87,7 +93,8 @@ id_type coreID, id_type nID,
 
 """
 
-class loadFile :
-    def __init__(self,size):
-
-        self._maxSize = size
+lib = ffi.dlopen("libNemoGen.so")
+x = lib.createFromData(0, 1,
+                      [True, False],
+                      [0,1], [1,2,3,4], [1,2,3,4],
+                      [False, False,False,False], False, 1,2,False,32,32,-1,-2,-3,-4,False,2,1000,100)

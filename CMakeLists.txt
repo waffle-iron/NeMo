@@ -114,7 +114,7 @@ function (create_symlinks)
 
         # Get OS dependent path to use in `execute_process`
         file(TO_NATIVE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${path_file}" link)
-        file(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${path_file}" target)
+        file(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/scripts/${path_file}" target)
 
         if (UNIX)
             set(command ln -s ${target} ${link})
@@ -141,7 +141,7 @@ create_symlinks(${files})
 
 ADD_EXECUTABLE(NeMo  ${model_srcs})
 if (${COMPILE_PYTHON})
-    ADD_EXECUTABLE(NemoGen ${gen_srcs})
+    ADD_LIBRARY(NemoGen MODULE ${gen_srcs})
 endif()
 TARGET_LINK_LIBRARIES(NeMo ROSS m)
 
