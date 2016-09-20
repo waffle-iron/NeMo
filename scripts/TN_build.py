@@ -37,3 +37,6 @@ C = ffi.dlopen('libNemoGen.so')
 
 if __name__ == '__main__':
     ffi.compile(verbose=True)
+
+def compileTN():
+    ffi.compile(verbose=True)
