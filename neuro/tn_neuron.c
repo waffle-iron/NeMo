@@ -725,6 +725,7 @@ void TN_create_simple_neuron(tn_neuron_state* s, tw_lp* lp) {
   s->dendriteLocal =
       s->myLocalID;  // tw_rand_integer(lp->rng, 0, AXONS_IN_CORE - 1);
   //     if (tnMapping == LLINEAR) {
+    //TODO: This line is fucked - prevents easy use of TN constructor. 
   s->outputGID = getAxonGlobal(dendriteCore, s->dendriteLocal);
   created++;
 }

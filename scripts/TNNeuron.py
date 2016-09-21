@@ -93,8 +93,53 @@ id_type coreID, id_type nID,
 
 """
 
+
+"""CREATE FROM ARGS REF:
+ void * createFromData(id_type coreID, id_type nID,
+                          bool* synapticConnectivity,
+                          short* G_i, short sigma[4], short S[4],
+                          bool b[4], bool epsilon, short sigma_l, short lambda,
+                          bool c, uint32_t alpha, uint32_t beta, short TM, short VR,
+                          short sigmaVR, short gamma, bool kappa,
+                           int signalDelay,
+                          uint64_t destGlobalID, int destAxonID);
+                          """
+
 lib = ffi.dlopen("libNemoGen.so")
 x = lib.createFromData(0, 1,
                       [True, False],
                       [0,1], [1,2,3,4], [1,2,3,4],
                       [False, False,False,False], False, 1,2,False,32,32,-1,-2,-3,-4,False,2,1000,100)
+class TN_Neuron:
+
+    coreID = 0
+    nID = 0
+    synapticConnectivity = []
+    G_i = []
+    sigma = []
+    S = []
+    b = []
+    epsilon = 0
+    sigma_l = 0
+    lmbda = 0
+    c = False
+    alpha = 0
+    beta = 0
+    TM = 0
+    VR = 0
+    sigmaVR = 0
+    gamma = 0
+    signalDelay = 0
+    destGlobalID = 0
+    destAxonID = 0
+
+    objRef = ""
+    def __init__(self, **kwargs):
+        for key in kwargs:
+            self.key = kwargs[key]
+
+        self.objRef = lib.createFromData(self.CoreID, self.nID, self.synapticConnectivity, self.G_i, self.sigma,
+                                         self.S, self.b, self.epsilon, self.sigma_l, self.lmbda, self.c, self.alpha,
+                                         self.beta, self.TM, self.VR, self.sigmaVR, self.gamma, self.kappa, self.signalDelay,
+                                         self.destGlobalID, self.destAxonID)
+

@@ -19,7 +19,7 @@ def formatCleanHeader(header):
 
     return value,name
 
-def readHeader(fileName = "../neuro/tn_neuron.h", name="TN_MODEL"):
+def readHeader(fileName = "../neuro/tn_neuron.h", name="TN_MODEL",typedefname="tn_neuron_state"):
     inStruct = False
 
     def lineF(mode,line):
@@ -44,7 +44,7 @@ def readHeader(fileName = "../neuro/tn_neuron.h", name="TN_MODEL"):
         structDef = ""
         for line in f.readlines():
             if inStruct:
-                if "}" in line:
+                if typedefname in line:
                     inStruct = False
                 elif lineValidate(line):
                     structDef += line
@@ -58,11 +58,35 @@ def readHeader(fileName = "../neuro/tn_neuron.h", name="TN_MODEL"):
         #print(structDef)
         structDef = formatCleanHeader(structDef)
         return structDef
+def getStruct(fileName = "../neuro/tn_neuron.h", name="TN_MODEL", typedefname="tn_neuron_state"):
 
-if __name__ == '__main__':
-    hdr = readHeader()
+    inStruct = False
+
+    with open(fileName, 'r', encoding='utf-8') as f:
+        structDef = ""
+        for line in f.readlines():
+            if inStruct:
+                structDef += line
+                if typedefname in line:
+                    inStruct = False
+
+            if name in line:
+                inStruct = True
+                structDef += line
+
+    return structDef
+
+def saveStruct(fileName = "../neuro/tn_neuron.h", name="TN_MODEL", typedefName="tn_neuron_state", saveName="tn_struct.txt"):
+    structDef = getStruct(fileName=fileName, name=name, typedefname=typedefName)
+
+    with open(saveName, 'w', encoding='utf-8') as f:
+        f.write(structDef)
+
+
+def tnMain(tn_header,cwd='.'):
+    hdr = readHeader(fileName=tn_header)
     print(hdr)
-    with open('hdrs.csv','w') as csvfile:
+    with open(cwd + '/hdrs.csv','w') as csvfile:
         fieldnames = ['type', 'name']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
@@ -70,3 +94,8 @@ if __name__ == '__main__':
         for type,name in zip(hdr[0],hdr[1]):
             writer.writerow({'type': type, 'name':name})
 
+    saveStruct(fileName=tn_header, saveName=cwd + "/tn_struct.txt")
+
+if __name__ == '__main__':
+
+    tnMain()
