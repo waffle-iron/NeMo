@@ -4,10 +4,10 @@
 
 #include "tn_neuron_bin.h"
 
-int main(int argc, char *argv[]) {
-    PyObject *pName, *pModule, *pDict, *pFunc, *pValue;
-
-}
+//int main(int argc, char *argv[]) {
+//    PyObject *pName, *pModule, *pDict, *pFunc, *pValue;
+//
+//}
 
 void *createFromData(bool *synapticConnectivity,
                      short *G_i,

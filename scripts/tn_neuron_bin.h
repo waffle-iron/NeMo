@@ -9,7 +9,7 @@
 #include "../neuro/tn_neuron.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <Python.h>
+//#include <Python.h>
 //#include "../../../core/ross.h"
 
 void *createFromData(bool* synapticConnectivity,
@@ -32,5 +32,5 @@ void *createFromData(bool* synapticConnectivity,
                                 uint64_t destGlobalID,
                                 int destAxonID
 );
-int main(int argc, char *argv[]);
+//int main(int argc, char *argv[]);
 #endif //ROSS_TOP_TN_NEURON_BIN_H
