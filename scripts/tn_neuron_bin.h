@@ -29,8 +29,10 @@ void *createFromData(bool* synapticConnectivity,
                                 short gamma,
                                 bool kappa,
                                 int signalDelay,
-                                uint64_t destGlobalID,
-                                int destAxonID
+                     int destAxonID,
+                     int destAxonCore,
+                     int neuronID,
+                     int neuronCore
 );
 //int main(int argc, char *argv[]);
 #endif //ROSS_TOP_TN_NEURON_BIN_H

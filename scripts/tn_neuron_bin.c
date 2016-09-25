@@ -26,10 +26,13 @@ void *createFromData(bool *synapticConnectivity,
                      short gamma,
                      bool kappa,
                      int signalDelay,
-                     uint64_t destGlobalID,
-                     int destAxonID
+                     int destAxonID,
+                     int destAxonCore,
+                     int neuronID,
+                     int neuronCore
 ) {
     tn_neuron_state *st;
+
 
     return st;
 }

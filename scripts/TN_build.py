@@ -23,13 +23,16 @@ def compileTN(cwd):
 
     typedef uint64_t stat_type;
         void * createFromData(id_type coreID, id_type nID,
-                          bool* synapticConnectivity,
-                          short* G_i, short sigma[4], short S[4],
-                          bool b[4], bool epsilon, short sigma_l, short lambda,
-                          bool c, uint32_t alpha, uint32_t beta, short TM, short VR,
-                          short sigmaVR, short gamma, bool kappa,
-                           int signalDelay,
-                          uint64_t destGlobalID, int destAxonID);
+                            bool* synapticConnectivity,
+                            short* G_i, short sigma[4], short S[4],
+                            bool b[4], bool epsilon, short sigma_l, short lambda,
+                            bool c, uint32_t alpha, uint32_t beta, short TM, short VR,
+                            short sigmaVR, short gamma, bool kappa,
+                            int signalDelay,
+                            int destAxonID,
+                            int destAxonCore,
+                            int neuronID,
+                            int neuronCore);
 
 
     """ + strt)

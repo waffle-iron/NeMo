@@ -3,12 +3,16 @@ Contains a class/struct that represents a TN Neuron.
 """
 import numpy as np
 from cffi import FFI
+import json
 import os
+from collections import OrderedDict
+
+
 x = os.getcwd()
 import sys
+
 sys.path.append(x)
 from _tn_neuron import ffi
-
 
 """
 Typedef ref:
@@ -93,25 +97,34 @@ id_type coreID, id_type nID,
 
 """
 
-
 """CREATE FROM ARGS REF:
- void * createFromData(id_type coreID, id_type nID,
-                          bool* synapticConnectivity,
-                          short* G_i, short sigma[4], short S[4],
-                          bool b[4], bool epsilon, short sigma_l, short lambda,
-                          bool c, uint32_t alpha, uint32_t beta, short TM, short VR,
-                          short sigmaVR, short gamma, bool kappa,
-                           int signalDelay,
-                          uint64_t destGlobalID, int destAxonID);
+ void * createFromData(void *createFromData(bool *synapticConnectivity,
+                     short *G_i,
+                     short sigma[4],
+                     short S[4],
+                     bool b[4],
+                     bool epsilon,
+                     short sigma_l,
+                     short lambda,
+                     bool c,
+                     uint32_t alpha,
+                     uint32_t beta,
+                     short TM,
+                     short VR,
+                     short sigmaVR,
+                     short gamma,
+                     bool kappa,
+                     int signalDelay,
+                     int destAxonID,
+                     int destAxonCore,
+                     int neuronID,
+                     int neuronCore);
                           """
 
 lib = ffi.dlopen("libNemoGen.so")
-x = lib.createFromData(0, 1,
-                      [True, False],
-                      [0,1], [1,2,3,4], [1,2,3,4],
-                      [False, False,False,False], False, 1,2,False,32,32,-1,-2,-3,-4,False,2,1000,100)
-class TN_Neuron:
 
+
+class TNNeuron(object):
     coreID = 0
     nID = 0
     synapticConnectivity = []
@@ -130,16 +143,32 @@ class TN_Neuron:
     sigmaVR = 0
     gamma = 0
     signalDelay = 0
-    destGlobalID = 0
     destAxonID = 0
+    destAxonCore = 0
+    neuronID = 0
+    neuronCore = 0
 
     objRef = ""
-    def __init__(self, **kwargs):
-        for key in kwargs:
-            self.key = kwargs[key]
 
-        self.objRef = lib.createFromData(self.CoreID, self.nID, self.synapticConnectivity, self.G_i, self.sigma,
-                                         self.S, self.b, self.epsilon, self.sigma_l, self.lmbda, self.c, self.alpha,
-                                         self.beta, self.TM, self.VR, self.sigmaVR, self.gamma, self.kappa, self.signalDelay,
-                                         self.destGlobalID, self.destAxonID)
+    def __init__(self,**kwargs):
+        vs = vars(self)
+        for key in kwargs.keys():
+            vs[key] = kwargs[key]
+        self.createObj()
+
+    # def __init__(self, **kwargs):
+    #     for key in kwargs:
+    #         self.key = kwargs[key]
+
+
+    def createObj(self):
+         self.objRef = lib.createFromData(self.CoreID, self.nID, self.synapticConnectivity, self.G_i, self.sigma,
+                                          self.S, self.b, self.epsilon, self.sigma_l, self.lmbda, self.c, self.alpha,
+                                          self.beta, self.TM, self.VR, self.sigmaVR, self.gamma, self.kappa,
+                                          self.signalDelay,
+                                          self.destGlobalID, self.destAxonID, self.destAxonCore, self.neuronID,
+                                          self.neuronCore)
+    def to_dict(self):
+        return vars(self)
+
 
